@@ -13,10 +13,10 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
-public class inMemoryUserStorage implements UserStorage {
+public class InMemoryUserStorage implements UserStorage {
     private final List<User> users = new ArrayList<>();
     private static final AtomicInteger idGenerator = new AtomicInteger(0);
-    private static final Logger logger = LoggerFactory.getLogger(inMemoryUserStorage.class);
+    private static final Logger logger = LoggerFactory.getLogger(InMemoryUserStorage.class);
 
 
     @Override

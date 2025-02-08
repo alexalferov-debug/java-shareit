@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Component
-public class ItemInMemoryStorage implements ItemStorage {
+public class InMemoryItemStorage implements ItemStorage {
     private final List<Item> items = new ArrayList<>();
     private static final AtomicInteger idGenerator = new AtomicInteger(0);
 
