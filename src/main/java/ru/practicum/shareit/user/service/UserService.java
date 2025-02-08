@@ -1,7 +1,5 @@
 package ru.practicum.shareit.user.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.user.dto.UserDTO;
 import ru.practicum.shareit.user.dto.UserRequestAddDto;
@@ -14,7 +12,6 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
     private final UserStorage userStorage;
-    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     public UserService(UserStorage userStorage) {
         this.userStorage = userStorage;
