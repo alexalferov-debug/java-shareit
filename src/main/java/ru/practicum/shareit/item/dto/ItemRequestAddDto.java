@@ -9,10 +9,8 @@ import ru.practicum.shareit.item.model.Item;
 @Getter
 public class ItemRequestAddDto {
     private int id;
-    @NotNull
     @NotBlank
     private String name;
-    @NotNull
     @NotBlank
     @Size(min = 1, max = 255)
     private String description;

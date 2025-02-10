@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class ItemServiceImpl implements ItemService {
-    UserService userService;
-    ItemStorage itemStorage;
+    private final UserService userService;
+    private final ItemStorage itemStorage;
 
     @Autowired
     ItemServiceImpl(UserService userService, ItemStorage itemStorage) {
