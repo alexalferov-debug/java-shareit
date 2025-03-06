@@ -14,4 +14,6 @@ public interface UserStorage {
     User updateUser(User user, int userId);
 
     void deleteUser(int id);
+
+    User getUserByEmail(String email);
 }

@@ -1,21 +1,18 @@
-package ru.practicum.shareit.item.dto;
+package ru.practicum.shareit.item.dto.comment;
+
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor
-public class ItemRequestAddDto {
-    private Integer id;
-    @NotBlank
-    private String name;
+@NoArgsConstructor
+public class AddCommentDto {
     @NotBlank
     @Size(min = 1, max = 255)
-    private String description;
-    @NotNull
-    private Boolean available;
-    private int ownerId;
+    private String text;
 }
