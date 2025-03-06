@@ -25,7 +25,7 @@ public class UserService {
     }
 
     public UserDTO addUser(UserRequestAddDto user) {
-        if (isNotUniqueEmail(user.getEmail(), null)) {
+        if (isNotUniqueEmail(user.getEmail())) {
             throw new DataConflictException("Пользователь с указанным email уже зарегистрирован");
         }
         return UserMapper.INSTANCE.toDTO(userStorage.saveUser(UserMapper.INSTANCE.toEntity(user)));
@@ -37,7 +37,7 @@ public class UserService {
             curUser.setName(user.getName());
         }
         if (user.getEmail() != null) {
-            if (isNotUniqueEmail(user.getEmail(), userId)) {
+            if (isNotUniqueEmail(user.getEmail())) {
                 throw new DataConflictException("Невозможно обновить пользователя, указанный email уже используется");
             }
             curUser.setEmail(user.getEmail());
@@ -58,7 +58,7 @@ public class UserService {
     }
 
 
-    private boolean isNotUniqueEmail(String email, Integer curUserId) {
+    private boolean isNotUniqueEmail(String email) {
             User user = userStorage.getUserByEmail(email);
             return Objects.nonNull(user);
     }
