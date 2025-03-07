@@ -22,7 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/items")
 public class ItemController {
-    private final static String USER_HEADER = "X-Sharer-User-Id";
+    private static final String USER_HEADER = "X-Sharer-User-Id";
     
     private final ItemService itemService;
 

@@ -12,7 +12,7 @@ import java.util.List;
 
 @Repository
 @Primary
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class DbItemStorage implements ItemStorage {
     ItemRepository itemRepository;
     CommentRepository commentRepository;

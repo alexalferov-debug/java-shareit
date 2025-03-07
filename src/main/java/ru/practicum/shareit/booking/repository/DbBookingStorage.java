@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class DbBookingStorage implements BookingStorage {
     BookingRepository repository;
 
