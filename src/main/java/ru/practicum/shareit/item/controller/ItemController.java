@@ -1,15 +1,18 @@
 package ru.practicum.shareit.item.controller;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemRequestAddDto;
 import ru.practicum.shareit.item.dto.ItemRequestPatchDto;
-import ru.practicum.shareit.item.service.ItemServiceImpl;
+import ru.practicum.shareit.item.dto.ItemWithoutOwnerDto;
+import ru.practicum.shareit.item.dto.comment.AddCommentDto;
+import ru.practicum.shareit.item.dto.comment.CommentDto;
+import ru.practicum.shareit.item.mapper.ItemMapper;
+import ru.practicum.shareit.item.service.ItemService;
 
 import java.util.List;
 
@@ -19,35 +22,41 @@ import java.util.List;
 @RestController
 @RequestMapping("/items")
 public class ItemController {
-    private final ItemServiceImpl itemService;
+    private static final String USER_HEADER = "X-Sharer-User-Id";
+    private final ItemService itemService;
 
     @Autowired
-    public ItemController(ItemServiceImpl itemService) {
+    public ItemController(ItemService itemService) {
         this.itemService = itemService;
     }
 
     @PostMapping
-    public ResponseEntity<ItemDto> create(@RequestBody @Valid ItemRequestAddDto itemDto, @RequestHeader(value = "X-Sharer-User-Id") @Positive int userId) {
+    public ResponseEntity<ItemWithoutOwnerDto> create(@RequestBody @Validated ItemRequestAddDto itemDto, @RequestHeader(value = USER_HEADER) @Positive int userId) {
         return ResponseEntity.status(HttpStatus.CREATED).body(itemService.createItem(itemDto, userId));
     }
 
+    @PostMapping("/{itemId}/comment")
+    public ResponseEntity<CommentDto> addComment(@RequestBody @Validated AddCommentDto addCommentDto, @RequestHeader(value = USER_HEADER) @Positive int userId, @PathVariable @Positive Integer itemId) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(itemService.addComment(addCommentDto, itemId, userId));
+    }
+
     @PatchMapping("/{id}")
-    public ResponseEntity<ItemDto> partialUpdate(@PathVariable("id") @Positive int id, @RequestBody ItemRequestPatchDto item, @RequestHeader(value = "X-Sharer-User-Id") @Positive int userId) {
+    public ResponseEntity<ItemWithoutOwnerDto> partialUpdate(@PathVariable("id") @Positive int id, @RequestBody @Validated ItemRequestPatchDto item, @RequestHeader(value = USER_HEADER) @Positive int userId) {
         return ResponseEntity.ok(itemService.updateItem(item, id, userId));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ItemDto> get(@PathVariable("id") @Positive int id) {
-        return ResponseEntity.ok(itemService.getItem(id));
+    public ResponseEntity<ItemWithoutOwnerDto> get(@PathVariable("id") @Positive int id, @RequestHeader(value = USER_HEADER) @Positive int userId) {
+        return ResponseEntity.ok(ItemMapper.INSTANCE.toItemWithoutOwnerDto(itemService.getItem(id, userId)));
     }
 
     @GetMapping
-    public ResponseEntity<List<ItemDto>> getAllByUserId(@RequestHeader(value = "X-Sharer-User-Id") int userId) {
+    public ResponseEntity<List<ItemWithoutOwnerDto>> getAllByUserId(@RequestHeader(value = USER_HEADER) int userId) {
         return ResponseEntity.ok(itemService.getAllItems(userId));
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<ItemDto>> search(@RequestParam(name = "text") String query) {
+    public ResponseEntity<List<ItemWithoutOwnerDto>> search(@RequestParam(name = "text") String query) {
         return ResponseEntity.ok(itemService.searchItem(query));
     }
 }

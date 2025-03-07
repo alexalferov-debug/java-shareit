@@ -1,9 +1,9 @@
 package ru.practicum.shareit.item.repository;
 
 import org.springframework.stereotype.Component;
-import ru.practicum.shareit.exception.DataConflictException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.model.comment.Comment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,13 +28,12 @@ public class InMemoryItemStorage implements ItemStorage {
     public List<Item> getAllItemsByUserId(int userId) {
         return items
                 .stream()
-                .filter(i -> i.getOwnerId() == userId)
+                .filter(i -> i.getOwner().getId() == userId)
                 .collect(Collectors.toList());
     }
 
     @Override
     public Item addItem(Item item, int userId) {
-        item.setOwnerId(userId);
         item.setId(generateId());
         items.add(item);
         return item;
@@ -43,17 +42,9 @@ public class InMemoryItemStorage implements ItemStorage {
     @Override
     public Item updateItem(Item item, int itemId, int userId) {
         Item findedItem = getItem(itemId);
-        if (findedItem.getOwnerId() != userId)
-            throw new DataConflictException("запрещена модификация чужих вещей");
-        if (item.getName() != null) {
-            findedItem.setName(item.getName());
-        }
-        if (item.getDescription() != null) {
-            findedItem.setDescription(item.getDescription());
-        }
-        if (item.getAvailable() != null) {
-            findedItem.setAvailable(item.getAvailable());
-        }
+        findedItem.setAvailable(item.getAvailable());
+        findedItem.setDescription(item.getDescription());
+        findedItem.setName(item.getName());
         return findedItem;
     }
 
@@ -68,6 +59,16 @@ public class InMemoryItemStorage implements ItemStorage {
                         i.getDescription().toLowerCase().contains(text.toLowerCase().trim()))
                         && i.getAvailable())
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Comment addComment(Comment comment) {
+        Item item = items.stream().filter(it -> it.getId() == comment.getItem().getId()).findFirst().orElse(null);
+        if (item == null) {
+            throw new NotFoundException("Item with id " + comment.getItem().getId() + " not found");
+        }
+        item.getComments().add(comment);
+        return comment;
     }
 
     private int generateId() {

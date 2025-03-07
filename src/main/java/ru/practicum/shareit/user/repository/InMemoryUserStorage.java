@@ -3,13 +3,11 @@ package ru.practicum.shareit.user.repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import ru.practicum.shareit.exception.DataConflictException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
@@ -38,9 +36,6 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User saveUser(User user) {
-        if (isNotUniqueEmail(user.getEmail(), null)) {
-            throw new DataConflictException("Пользователь с указанным email уже зарегистрирован");
-        }
         logger.debug("Попытка добавления пользователя: {}", user);
         user.setId(generateId());
         users.add(user);
@@ -52,15 +47,8 @@ public class InMemoryUserStorage implements UserStorage {
     public User updateUser(User user, int userId) {
         logger.debug("Попытка обновления пользователя с ID: {}", userId);
         User curUser = getUser(userId);
-        if (user.getName() != null) {
-            curUser.setName(user.getName());
-        }
-        if (user.getEmail() != null) {
-            if (isNotUniqueEmail(user.getEmail(), userId)) {
-                throw new DataConflictException("Невозможно обновить пользователя, указанный email уже используется");
-            }
-            curUser.setEmail(user.getEmail());
-        }
+        curUser.setName(user.getName());
+        curUser.setEmail(user.getEmail());
         logger.info("Пользователь с ID {} обновлён", userId);
         return curUser;
     }
@@ -71,13 +59,15 @@ public class InMemoryUserStorage implements UserStorage {
         users.removeIf(u -> u.getId() == id);
     }
 
-    private int generateId() {
-        return idGenerator.incrementAndGet();
+    public User getUserByEmail(String email) {
+        return users
+                .stream()
+                .filter(u -> u.getEmail().equals(email))
+                .findFirst()
+                .orElse(null);
     }
 
-    private boolean isNotUniqueEmail(String email, Integer curUserId) {
-        return users.stream()
-                .anyMatch(u -> !Objects.equals(u.getId(), curUserId)
-                        && email.equalsIgnoreCase(u.getEmail()));
+    private int generateId() {
+        return idGenerator.incrementAndGet();
     }
 }
