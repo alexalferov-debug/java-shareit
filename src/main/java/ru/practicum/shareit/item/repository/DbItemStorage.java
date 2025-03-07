@@ -12,6 +12,7 @@ import java.util.List;
 
 @Repository
 @Primary
+@Transactional(readOnly=true)
 public class DbItemStorage implements ItemStorage {
     ItemRepository itemRepository;
     CommentRepository commentRepository;
@@ -51,6 +52,7 @@ public class DbItemStorage implements ItemStorage {
     }
 
     @Override
+    @Transactional
     public Comment addComment(Comment comment) {
         return commentRepository.save(comment);
     }

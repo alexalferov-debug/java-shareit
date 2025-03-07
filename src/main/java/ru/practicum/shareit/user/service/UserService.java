@@ -59,7 +59,7 @@ public class UserService {
 
 
     private boolean isNotUniqueEmail(String email) {
-            User user = userStorage.getUserByEmail(email);
-            return Objects.nonNull(user);
+        User user = userStorage.getUserByEmail(email);
+        return Objects.nonNull(user);
     }
 }

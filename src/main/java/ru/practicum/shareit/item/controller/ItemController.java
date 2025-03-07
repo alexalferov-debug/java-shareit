@@ -22,6 +22,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/items")
 public class ItemController {
+    private final String USER_HEADER = "X-Sharer-User-Id";
+    
     private final ItemService itemService;
 
     @Autowired
@@ -30,27 +32,27 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<ItemWithoutOwnerDto> create(@RequestBody @Validated ItemRequestAddDto itemDto, @RequestHeader(value = "X-Sharer-User-Id") @Positive int userId) {
+    public ResponseEntity<ItemWithoutOwnerDto> create(@RequestBody @Validated ItemRequestAddDto itemDto, @RequestHeader(value = USER_HEADER) @Positive int userId) {
         return ResponseEntity.status(HttpStatus.CREATED).body(itemService.createItem(itemDto, userId));
     }
 
     @PostMapping("/{itemId}/comment")
-    public ResponseEntity<CommentDto> addComment(@RequestBody @Validated AddCommentDto addCommentDto, @RequestHeader(value = "X-Sharer-User-Id") @Positive int userId, @PathVariable @Positive Integer itemId) {
+    public ResponseEntity<CommentDto> addComment(@RequestBody @Validated AddCommentDto addCommentDto, @RequestHeader(value = USER_HEADER) @Positive int userId, @PathVariable @Positive Integer itemId) {
         return ResponseEntity.status(HttpStatus.CREATED).body(itemService.addComment(addCommentDto, itemId, userId));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ItemWithoutOwnerDto> partialUpdate(@PathVariable("id") @Positive int id, @RequestBody @Validated ItemRequestPatchDto item, @RequestHeader(value = "X-Sharer-User-Id") @Positive int userId) {
+    public ResponseEntity<ItemWithoutOwnerDto> partialUpdate(@PathVariable("id") @Positive int id, @RequestBody @Validated ItemRequestPatchDto item, @RequestHeader(value = USER_HEADER) @Positive int userId) {
         return ResponseEntity.ok(itemService.updateItem(item, id, userId));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ItemWithoutOwnerDto> get(@PathVariable("id") @Positive int id, @RequestHeader(value = "X-Sharer-User-Id") @Positive int userId) {
+    public ResponseEntity<ItemWithoutOwnerDto> get(@PathVariable("id") @Positive int id, @RequestHeader(value = USER_HEADER) @Positive int userId) {
         return ResponseEntity.ok(ItemMapper.INSTANCE.toItemWithoutOwnerDto(itemService.getItem(id, userId)));
     }
 
     @GetMapping
-    public ResponseEntity<List<ItemWithoutOwnerDto>> getAllByUserId(@RequestHeader(value = "X-Sharer-User-Id") int userId) {
+    public ResponseEntity<List<ItemWithoutOwnerDto>> getAllByUserId(@RequestHeader(value = USER_HEADER) int userId) {
         return ResponseEntity.ok(itemService.getAllItems(userId));
     }
 

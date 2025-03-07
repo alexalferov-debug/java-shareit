@@ -10,6 +10,7 @@ import java.util.List;
 
 @Repository
 @Primary
+@Transactional(readOnly = true)
 public class DbUserStorage implements UserStorage {
 
     private final UserRepository userRepository;
