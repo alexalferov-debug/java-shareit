@@ -23,7 +23,6 @@ import java.util.List;
 @RequestMapping("/items")
 public class ItemController {
     private static final String USER_HEADER = "X-Sharer-User-Id";
-    
     private final ItemService itemService;
 
     @Autowired

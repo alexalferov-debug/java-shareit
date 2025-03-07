@@ -20,7 +20,6 @@ import java.util.List;
 @RequestMapping(path = "/bookings")
 public class BookingController {
     private static final String USER_HEADER = "X-Sharer-User-Id";
-
     BookingService bookingService;
 
     @Autowired
