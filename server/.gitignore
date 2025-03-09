@@ -31,7 +31,3 @@ build/
 
 ### VS Code ###
 .vscode/
-/src/main/resources/volumes/postgres/
-/src/main/resources/volumes/postgres/
-/server/src/main/resources/volumes/postgres/
-/src/
