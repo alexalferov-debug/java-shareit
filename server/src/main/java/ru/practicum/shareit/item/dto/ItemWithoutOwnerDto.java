@@ -2,6 +2,8 @@ package ru.practicum.shareit.item.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import ru.practicum.shareit.item.dto.comment.CommentDto;
 import ru.practicum.shareit.item.model.BookingDates;
 import ru.practicum.shareit.request.dto.ItemRequestWithoutResponsesDto;
@@ -12,6 +14,8 @@ import java.util.List;
  * TODO Sprint add-controllers.
  */
 @Getter
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class ItemWithoutOwnerDto {
     private Long id;

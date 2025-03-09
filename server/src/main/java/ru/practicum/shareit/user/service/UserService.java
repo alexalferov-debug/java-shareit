@@ -21,7 +21,6 @@ public class UserService {
     @Autowired
     public UserService(UserStorage userStorage) {
         this.userStorage = userStorage;
-
     }
 
     public UserDTO addUser(UserRequestAddDto user) {
